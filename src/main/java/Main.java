@@ -11,9 +11,11 @@ public class Main {
         FileHandler fileHandler = new FileHandler();
         Parser parser = new Parser();
 
-        List<String> dataList = new ArrayList<String>();
-        List<List<String>> parsedList = new ArrayList<>();
+        List<String> dataList;
+        List<List<String>> parsedList;
+
         dataList = fileHandler.readFile(dataFile);
         parsedList = parser.parseInput(dataList);
+        System.out.println(parsedList);
     }
 }

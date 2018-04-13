@@ -14,13 +14,12 @@ public class Parser {
             Scanner scanner = new Scanner(string).useDelimiter(delims);
             List<String> tempList = new ArrayList<>();
 
-            for(int i = 0; i < 17; i++) {
+            while(scanner.hasNext()) {
                 tempList.add(scanner.next().trim());
             }
             result.add(tempList);
         }
-        System.out.println(result);
         System.out.println(result.size());
-        return null;
+        return result;
     }
 }
