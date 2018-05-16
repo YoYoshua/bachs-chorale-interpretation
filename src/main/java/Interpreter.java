@@ -3,54 +3,56 @@ package main.java;
 import java.util.*;
 
 public class Interpreter {
-    private Map<String, Float> classes = new HashMap<>();
-    private Map<String, Float> knownParameters = new HashMap<>();
-    private Scanner scanner = new Scanner(System.in);
+    public Map<String, Float> classes = new HashMap<>();
+    private Float classID = 0.0f;
 
     public List<List<Float>> interpretData(List<List<String>> stringsList) {
         List<List<Float>> resultList = new ArrayList<>();
+        int i;
 
         for (List<String> strings: stringsList) {
             List<Float> tempList = new ArrayList<>();
             Float tempFloat = 0.0f;
+            i = 1;
 
             for (String string: strings) {
+                if(i == 1 || i == 2 || i == 15 || i == 16) {
+                    i++;
+                    continue;
+                }
                 try {
                     tempFloat.parseFloat(string);
                 }
                 catch(NumberFormatException e) {
                     if(string.equals("YES")) tempFloat = 1.0f;
                     else if(string.equals("NO")) tempFloat = 0.0f;
+                    else if(classes.containsKey(string)) tempFloat = classes.get(string);
                     else {
                         tempFloat = insertCustomValue(string);
                     }
                 }
                 tempList.add(tempFloat);
+                i++;
             }
-            resultList.add(tempList);
+            if(!resultList.contains(tempList)) {
+                resultList.add(tempList);
+            }
         }
+        System.out.println(resultList.size());
+        System.out.println("Output classes: " + classID);
         return resultList;
     }
 
     private Float insertCustomValue (String string) {
         Float tempFloat = 0.0f;
 
-        if(knownParameters.containsKey(string)) {
-            return knownParameters.get(string);
+        if(classes.containsKey(string)) {
+            return classes.get(string);
         }
         else {
-            while(true) {
-                System.out.println("Napotkano nieznany parametr: " + string + ". Jaka ma być jego wartość?");
-                try {
-                    tempFloat = scanner.nextFloat();
-                    knownParameters.put(string, tempFloat);
-                    break;
-                }
-                catch(InputMismatchException e) {
-                    System.out.println("Wprowadzono niewłaściwy parametr!");
-                    scanner.next();
-                }
-            }
+            classes.put(string, classID);
+            tempFloat = classID;
+            classID++;
             return tempFloat;
         }
     }
