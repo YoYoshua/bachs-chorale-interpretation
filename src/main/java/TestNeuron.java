@@ -1,6 +1,9 @@
 package main.java;
 
-import java.sql.SQLOutput;
+import main.java.Neuron.Neuron;
+import main.java.Neuron.SigmoidalNeuron;
+import main.java.Normalizer.Normalizer;
+
 import java.util.ArrayList;
 import java.util.List;
 import java.util.Random;
@@ -50,7 +53,7 @@ public class TestNeuron {
         System.out.println(target);
 
         //Learning
-        Neuron neuron = new Neuron(0.1F);
+        Neuron neuron = new SigmoidalNeuron(0.1F, 2.F);
         List<Float> weightList = new ArrayList<>();
         Random random = new Random();
         for(int i = 0; i < inputData.get(0).size(); i++) {
@@ -59,7 +62,7 @@ public class TestNeuron {
         System.out.println(weightList);
 
         neuron.setWeights(weightList);
-        int epoch = 100;
+        int epoch = 1000;
         for(int i = 0; i < epoch; i++) {
             System.out.println("Epoch #" + i);
             for(int j = 0; j < inputData.size(); j++) {

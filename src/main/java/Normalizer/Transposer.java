@@ -1,4 +1,4 @@
-package main.java;
+package main.java.Normalizer;
 
 import java.util.ArrayList;
 import java.util.List;
@@ -37,7 +37,7 @@ public class Transposer {
         return resultList;
     }
 
-    protected List<List<Float>> transpose(List<List<Float>> matrix) {
+    public List<List<Float>> transpose(List<List<Float>> matrix) {
         List<List<Float>> result = new ArrayList<>();
 
         for(int i = 0; i < matrix.get(0).size(); i++) {
