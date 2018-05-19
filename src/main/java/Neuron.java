@@ -3,84 +3,52 @@ package main.java;
 import java.util.List;
 
 public class Neuron {
-    private List<Float> weightList;
-    private List<Float> inputList;
-
-    private Float beta;
     private Float learningRate;
-    private Float result = 0.0F;
-    private Float sum = 0.0F;
+    private List<Float> weights;
+    private List<Float> inputData;
 
-    private Float error;
+    private Float sum;
+    private Float output;
+    private Float localError;
+    private Float globalError;
 
-    Neuron(Float beta, Float learningRate) {
-        this.beta = beta;
+    Neuron(Float learningRate) {
         this.learningRate = learningRate;
     }
 
-    public Float calculateResult(List<Float> inputList) {
-        sum = 0.0F;
-        this.inputList = inputList;
+    public void calculateOutput(List<Float> inputData) {
+        this.inputData = inputData;
+        this.sum = 0.0F;
 
-        for(int i = 0; i < weightList.size(); i++) {
-            sum += weightList.get(i)*inputList.get(i);
+        for(int i = 0; i < inputData.size(); i++) {
+            this.sum += inputData.get(i)*weights.get(i);
         }
-        result = sendThroughActivationFunction(sum);
-        return result;
-    }
-
-    private Float sendThroughActivationFunction(Float result) {
-        return (float)Math.tanh(beta*result);
-    }
-
-    private Float sendThroughDerivative(Float result) {
-        Float derivative = beta*sech(result)*sech(result);
-        return derivative;
+        this.output = activationFunction(this.sum);
     }
 
     public void calculateError(Float target) {
-        Float delta = 0.0F;
-        for(int i = 0; i < weightList.size(); i++) {
-            delta = -(target - result)*sendThroughDerivative(sum);
-            error = learningRate*delta*inputList.get(i);
-            weightList.set(i, adjustWeight(error, weightList.get(i)));
+        this.globalError = 0.0F;
+        for(int i = 0; i < this.inputData.size(); i++) {
+            this.localError = target - this.output;
+            this.weights.set(i, this.weights.get(i) + (this.learningRate*this.localError*this.inputData.get(i)));
+            this.globalError += (this.localError*this.localError);
         }
     }
 
-    private Float sech(Float x) {
-        return (float)(1/Math.cosh(x));
+    private Float activationFunction(Float x) {
+        if(x > 0) return 1.0F;
+        else return -1.0F;
     }
 
-    private Float adjustWeight(Float error, Float weight) {
-        return weight - error;
+    public void setWeights(List<Float> weights) {
+        this.weights = weights;
     }
 
-    public List<Float> getWeightList() {
-        return weightList;
+    public Float getGlobalError() {
+        return globalError;
     }
 
-    public void setWeightList(List<Float> weightList) {
-        this.weightList = weightList;
+    public Float getOutput() {
+        return output;
     }
-
-    public List<Float> getInputList() {
-        return inputList;
-    }
-
-    public void setInputList(List<Float> inputList) {
-        this.inputList = inputList;
-    }
-
-    public Float getError() {
-        return error;
-    }
-
-    public void setError(Float error) {
-        this.error = error;
-    }
-
-    public Float getResult() {
-        return result;
-    }
-
 }

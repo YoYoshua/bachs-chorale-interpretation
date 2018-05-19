@@ -1,5 +1,6 @@
 package main.java;
 
+import java.sql.SQLOutput;
 import java.util.ArrayList;
 import java.util.List;
 import java.util.Random;
@@ -45,11 +46,11 @@ public class TestNeuron {
         temp3.add(0.0F);
         temp3.add(1.0F);
         target.add(temp3);
-        target = normalizer.transpose(target);
+        target = normalizer.normalize(target);
         System.out.println(target);
 
         //Learning
-        Neuron neuron = new Neuron(15.0F, 0.1F);
+        Neuron neuron = new Neuron(0.1F);
         List<Float> weightList = new ArrayList<>();
         Random random = new Random();
         for(int i = 0; i < inputData.get(0).size(); i++) {
@@ -57,29 +58,36 @@ public class TestNeuron {
         }
         System.out.println(weightList);
 
-        neuron.setWeightList(weightList);
-        int epoch = 10;
+        neuron.setWeights(weightList);
+        int epoch = 100;
         for(int i = 0; i < epoch; i++) {
             System.out.println("Epoch #" + i);
             for(int j = 0; j < inputData.size(); j++) {
-                neuron.calculateResult(inputData.get(j));
+                System.out.println("Input data:" + inputData.get(j));
+                System.out.println("Target data: " + target.get(j).get(0));
+                System.out.println();
+
+                neuron.calculateOutput(inputData.get(j));
                 neuron.calculateError(target.get(j).get(0));
 
                 //Show results
                 System.out.println("Target: " + target.get(j).get(0));
-                System.out.println("Result: " + neuron.getResult());
-                System.out.println("Neuron error: " + neuron.getError());
+                System.out.println("Output: " + neuron.getOutput());
+                System.out.println("Neuron error: " + neuron.getGlobalError());
+                System.out.println();
             }
         }
 
         //Testing
         List<Float> testData = new ArrayList<>();
         while(true) {
+            testData.clear();
             for(int i = 0; i < inputData.get(0).size(); i++) {
                 System.out.println("Input #" + i);
                 testData.add(scanner.nextFloat());
             }
-            System.out.println(neuron.calculateResult(testData));
+            neuron.calculateOutput(testData);
+            System.out.println(neuron.getOutput());
         }
     }
 }
