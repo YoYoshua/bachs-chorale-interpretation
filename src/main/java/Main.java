@@ -1,7 +1,9 @@
 package main.java;
 
 import java.io.*;
+import java.sql.SQLOutput;
 import java.util.ArrayList;
+import java.util.Collections;
 import java.util.List;
 import java.util.Map;
 
@@ -28,14 +30,16 @@ public class Main {
 
         //Normalisation phase
         inputSet = transposer.getInputSet(interpretedList);
-        System.out.println(inputSet);
         targetSet = transposer.getTargetSet(interpretedList);
-        inputSet = normalizer.normalize(inputSet);
-        System.out.println(inputSet);
+        //inputSet = normalizer.normalize(inputSet);
+        //targetSet = normalizer.normalize(targetSet);
 
-        //Saving to file
+        //Test neuron
+        TestNeuron testNeuron = new TestNeuron();
+        testNeuron.start();
 
         //Learning phase
+
 
         //Saving to file phase
         inputSet = transposer.transpose(inputSet);

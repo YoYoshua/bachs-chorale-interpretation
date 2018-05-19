@@ -12,8 +12,11 @@ public class Normalizer extends Transposer{
             List<Float> temp = new ArrayList<>();
             for (Float number : set) {
                 //Normalizacja [-1, 1]
-                Float norm = ((number - set.get(set.indexOf(Collections.min(set)))) /
-                        (set.get(set.indexOf(Collections.max(set))) - set.get(set.indexOf(Collections.min(set))))) * 2 - 1;
+                Float norm = number;
+                if(set.get(set.indexOf(Collections.min(set))) < set.get(set.indexOf(Collections.max(set)))) {
+                    norm = ((number - set.get(set.indexOf(Collections.min(set)))) /
+                            (set.get(set.indexOf(Collections.max(set))) - set.get(set.indexOf(Collections.min(set))))) * 2 - 1;
+                }
                 temp.add(norm);
             }
             normalizedList.add(temp);
