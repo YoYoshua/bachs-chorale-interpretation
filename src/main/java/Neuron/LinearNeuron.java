@@ -1,10 +1,8 @@
 package main.java.Neuron;
 
-public class SigmoidalNeuron extends Neuron {
-
-    public SigmoidalNeuron(Float learningRate, Float beta) {
+public class LinearNeuron extends Neuron {
+    public LinearNeuron(Float learningRate) {
         this.learningRate = learningRate;
-        this.beta = beta;
     }
 
     @Override
@@ -20,11 +18,11 @@ public class SigmoidalNeuron extends Neuron {
 
     @Override
     protected Float activationFunction(Float x) {
-        return (float)Math.tanh(beta*x);
+        return x;
     }
 
     @Override
     protected Float activationDerivative(Float x) {
-        return (beta*(sech(x)*sech(x)));
+        return 1.F;
     }
 }

@@ -19,6 +19,10 @@ public class Transposer {
             for (int i = 0; i < inputLength; i++) {
                 tempList.add(set.get(i));
             }
+
+            //Add bias
+            tempList.add(1.F);
+
             resultList.add(tempList);
         }
         resultList = transpose(resultList);

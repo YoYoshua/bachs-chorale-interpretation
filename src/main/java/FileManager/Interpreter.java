@@ -16,12 +16,12 @@ public class Interpreter {
             i = 1;
 
             for (String string: strings) {
-                if(i == 1 || i == 2 || i == 15 || i == 16) {
-                    i++;
-                    continue;
-                }
+//                if(i == 1 || i == 2 || i == 15 || i == 16) {
+//                    i++;
+//                    continue;
+//                }
                 try {
-                    tempFloat.parseFloat(string);
+                    tempFloat = tempFloat.parseFloat(string);
                 }
                 catch(NumberFormatException e) {
                     if(string.equals("YES")) tempFloat = 1.0f;
@@ -34,6 +34,7 @@ public class Interpreter {
                 tempList.add(tempFloat);
                 i++;
             }
+
             if(!resultList.contains(tempList)) {
                 resultList.add(tempList);
             }

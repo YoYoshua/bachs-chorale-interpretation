@@ -1,6 +1,8 @@
 package main.java.Neuron;
 
+import java.util.ArrayList;
 import java.util.List;
+import java.util.Random;
 
 public abstract class Neuron {
     protected Float learningRate;
@@ -17,14 +19,20 @@ public abstract class Neuron {
     Neuron() {
         this.learningRate = 0.1F;
         this.beta = 2.F;
+
+        this.weights = new ArrayList<>();
+        this.inputData = new ArrayList<>();
     }
 
     Neuron(Float learningRate, Float beta) {
         this.learningRate = learningRate;
         this.beta = beta;
+
+        this.weights = new ArrayList<>();
+        this.inputData = new ArrayList<>();
     }
 
-    public void calculateOutput(List<Float> inputData) {
+    public Float calculateOutput(List<Float> inputData) {
         this.inputData = inputData;
         this.sum = 0.0F;
 
@@ -32,6 +40,15 @@ public abstract class Neuron {
             this.sum += inputData.get(i)*weights.get(i);
         }
         this.output = activationFunction(this.sum);
+        return this.output;
+    }
+
+    public void initialiseWeights(int inputsAmount) {
+        weights.clear();
+        Random random = new Random();
+        for(int i = 0; i < inputsAmount; i++) {
+            weights.add(random.nextFloat());
+        }
     }
 
     public abstract void calculateError(Float target);
@@ -44,6 +61,14 @@ public abstract class Neuron {
 
     public void setWeights(List<Float> weights) {
         this.weights = weights;
+    }
+
+    public List<Float> getWeights() {
+        return weights;
+    }
+
+    public Float getLearningRate() {
+        return learningRate;
     }
 
     public Float getGlobalError() {

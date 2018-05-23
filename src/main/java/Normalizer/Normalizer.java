@@ -24,4 +24,15 @@ public class Normalizer extends Transposer{
         normalizedList = transpose(normalizedList);
         return normalizedList;
     }
+
+    public List<Float> normalizeList(List<Float> inputData) {
+        List<List<Float>> preparedList = new ArrayList<>();
+        List<Float> result;
+
+        preparedList.add(inputData);
+        preparedList = normalize(preparedList);
+        preparedList = transpose(preparedList);
+        result = preparedList.get(0);
+        return result;
+    }
 }

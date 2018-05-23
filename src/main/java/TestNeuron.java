@@ -45,9 +45,9 @@ public class TestNeuron {
 
         List<Float> temp3 = new ArrayList<>();
         temp3.add(0.0F);
-        temp3.add(0.0F);
-        temp3.add(0.0F);
         temp3.add(1.0F);
+        temp3.add(1.0F);
+        temp3.add(0.0F);
         target.add(temp3);
         target = normalizer.normalize(target);
         System.out.println(target);
@@ -62,7 +62,7 @@ public class TestNeuron {
         System.out.println(weightList);
 
         neuron.setWeights(weightList);
-        int epoch = 1000;
+        int epoch = 100000;
         for(int i = 0; i < epoch; i++) {
             System.out.println("Epoch #" + i);
             for(int j = 0; j < inputData.size(); j++) {

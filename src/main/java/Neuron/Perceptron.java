@@ -1,11 +1,6 @@
 package main.java.Neuron;
 
-public class SigmoidalNeuron extends Neuron {
-
-    public SigmoidalNeuron(Float learningRate, Float beta) {
-        this.learningRate = learningRate;
-        this.beta = beta;
-    }
+public class Perceptron extends Neuron {
 
     @Override
     public void calculateError(Float target) {
@@ -13,18 +8,19 @@ public class SigmoidalNeuron extends Neuron {
         for(int i = 0; i < this.inputData.size(); i++) {
             this.localError = target - this.output;
             this.weights.set(i, this.weights.get(i) +
-                    (this.learningRate*this.localError*activationDerivative(sum)*this.inputData.get(i)));
+                    (this.learningRate*this.localError*this.inputData.get(i)));
             this.globalError += (this.localError*this.localError);
         }
     }
 
     @Override
     protected Float activationFunction(Float x) {
-        return (float)Math.tanh(beta*x);
+        if(x > 0) return 1.0F;
+        else return -1.0F;
     }
 
     @Override
     protected Float activationDerivative(Float x) {
-        return (beta*(sech(x)*sech(x)));
+        return null;
     }
 }
