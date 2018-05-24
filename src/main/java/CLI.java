@@ -17,8 +17,8 @@ import java.util.Scanner;
 public class CLI {
     private Scanner scanner = new Scanner(System.in);
 
-    //private File dataFile = new File("resources/iris.data.txt");
-    private File dataFile = new File("resources/jsbach_chorals_harmony.data");
+    private File dataFile = new File("resources/iris.data.txt");
+    //private File dataFile = new File("resources/jsbach_chorals_harmony.data");
     private FileHandler fileHandler = new FileHandler();
     private Parser parser = new Parser();
     private Interpreter interpreter = new Interpreter();
@@ -85,8 +85,8 @@ public class CLI {
         targetSet = transposer.getTargetSet(interpretedList);
 
         inputSet = normalizer.normalize(inputSet);
-        targetSet = normalizer.transpose(targetSet);
-        //targetSet = normalizer.normalize(targetSet);
+        //targetSet = normalizer.transpose(targetSet);
+        targetSet = normalizer.normalize(targetSet);
 
         System.out.println(inputSet);
         System.out.println(targetSet);

@@ -16,10 +16,10 @@ public class Interpreter {
             i = 1;
 
             for (String string: strings) {
-                if(i == 1 || i == 2 || i == 15 || i == 16) {
-                    i++;
-                    continue;
-                }
+//                if(i == 1 || i == 2 || i == 15 || i == 16) {
+//                    i++;
+//                    continue;
+//                }
                 try {
                     tempFloat = tempFloat.parseFloat(string);
                 }

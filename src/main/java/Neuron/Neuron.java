@@ -1,5 +1,7 @@
 package main.java.Neuron;
 
+import com.sun.javafx.scene.control.skin.VirtualFlow;
+
 import java.util.ArrayList;
 import java.util.List;
 import java.util.Random;
@@ -9,6 +11,7 @@ public abstract class Neuron {
     protected Float beta;
 
     protected List<Float> weights;
+    protected List<Float> previousWeights;
     protected List<Float> inputData;
 
     protected Float sum;
@@ -29,6 +32,7 @@ public abstract class Neuron {
         this.beta = beta;
 
         this.weights = new ArrayList<>();
+        this.previousWeights = new ArrayList<>();
         this.inputData = new ArrayList<>();
     }
 
@@ -49,6 +53,12 @@ public abstract class Neuron {
         for(int i = 0; i < inputsAmount; i++) {
             weights.add(random.nextFloat());
         }
+        this.previousWeights = weights;
+    }
+
+    public void updateWeights (List<Float> newWeights) {
+        this.previousWeights = this.weights;
+        this.weights = newWeights;
     }
 
     public abstract void calculateError(Float target);
@@ -77,5 +87,13 @@ public abstract class Neuron {
 
     public Float getOutput() {
         return output;
+    }
+
+    public List<Float> getPreviousWeights() {
+        return previousWeights;
+    }
+
+    public void setPreviousWeights(List<Float> previousWeights) {
+        this.previousWeights = previousWeights;
     }
 }

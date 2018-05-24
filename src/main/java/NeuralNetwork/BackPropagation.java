@@ -13,6 +13,7 @@ public class BackPropagation {
 
     private Float learningRate;
     private Float beta;
+    private Float alpha = 0.2F;
     private int epochs;
 
     private NeuralNetwork network;
@@ -66,19 +67,22 @@ public class BackPropagation {
 
     private NeuralNetwork train() {
         List<Float> output;
+        Float epochSSE;
         for(int x = 0; x < epochs; x++) {
+            epochSSE = 0.F;
 //            System.out.println("Epoch #" + x);
             for(int i = 0; i < network.getInputData().size(); i++) {
-                System.out.println("Input data: " + network.getInputData().get(i));
-                System.out.println("Target data: " + network.getTargetData().get(i));
+//                System.out.println("Input data: " + network.getInputData().get(i));
+//                System.out.println("Target data: " + network.getTargetData().get(i));
                 output = feedForward(network.getInputData().get(i));
-                System.out.println("Output:" + output);
-                System.out.println("Epoch #" + x);
-                System.out.println("SSE: " + ((network.getTargetData().get(i).get(0) -
-                        output.get(0))*(network.getTargetData().get(i).get(0) - output.get(0))));
-                System.out.println();
+//                System.out.println("Output:" + output);
+//                System.out.println("Epoch #" + x);
+                epochSSE += ((network.getTargetData().get(i).get(0) -
+                        output.get(0))*(network.getTargetData().get(i).get(0) - output.get(0)));
+//                System.out.println();
                 backPropagation(network.getTargetData().get(i), output);
             }
+            System.out.println("Epoch #" + x + " - SSE: " + epochSSE);
         }
         return network;
     }
@@ -89,7 +93,7 @@ public class BackPropagation {
         for (int i = 0; i < network.getLayers().size() - 1; i++) {
             network.getLayers().get(i).calculateOutput();
             outputs = network.getLayers().get(i).getOutputs();
-            System.out.println(outputs);
+//            System.out.println(outputs);
             network.getLayers().get(i + 1).setInputs(outputs);
         }
         return network.getOutputLayer().calculateOutput();
@@ -154,9 +158,10 @@ public class BackPropagation {
     private void updateWeights(Neuron neuron, List<Float> weightsDelta) {
         List<Float> updatedWeights = new ArrayList<>();
         for(int i = 0; i < weightsDelta.size(); i++) {
-            updatedWeights.add(neuron.getWeights().get(i) - (weightsDelta.get(i)*learningRate));
+            updatedWeights.add(neuron.getWeights().get(i) - (weightsDelta.get(i)*learningRate) +
+                    (alpha * (neuron.getWeights().get(i) - neuron.getPreviousWeights().get(i))));
         }
-        neuron.setWeights(updatedWeights);
+        neuron.updateWeights(updatedWeights);
     }
 
     private Float sech(Float x) {
