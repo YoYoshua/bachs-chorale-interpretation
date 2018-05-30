@@ -1,6 +1,5 @@
 package main.java;
 
-import javafx.collections.transformation.TransformationList;
 import main.java.FileManager.FileHandler;
 import main.java.FileManager.Interpreter;
 import main.java.FileManager.Parser;
@@ -17,8 +16,10 @@ import java.util.Scanner;
 public class CLI {
     private Scanner scanner = new Scanner(System.in);
 
+    //private File dataFile = new File("resources/data.txt");
     private File dataFile = new File("resources/iris.data.txt");
     //private File dataFile = new File("resources/jsbach_chorals_harmony.data");
+    //private File dataFile = new File("resources/jsbach_chorals_harmony_2.data");
     private FileHandler fileHandler = new FileHandler();
     private Parser parser = new Parser();
     private Interpreter interpreter = new Interpreter();
@@ -57,6 +58,15 @@ public class CLI {
                         break;
                     } else {
                         backPropagation.start(inputSet, targetSet);
+                        break;
+                    }
+
+                case "experiment":
+                    if(!dataPrepared) {
+                        System.out.println("You need to prepare data first!");
+                        break;
+                    } else {
+                        backPropagation.experiment();
                         break;
                     }
 

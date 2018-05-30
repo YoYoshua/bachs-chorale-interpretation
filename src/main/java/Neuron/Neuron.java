@@ -1,7 +1,5 @@
 package main.java.Neuron;
 
-import com.sun.javafx.scene.control.skin.VirtualFlow;
-
 import java.util.ArrayList;
 import java.util.List;
 import java.util.Random;
@@ -91,6 +89,10 @@ public abstract class Neuron {
 
     public List<Float> getPreviousWeights() {
         return previousWeights;
+    }
+
+    public List<Float> getInputData() {
+        return inputData;
     }
 
     public void setPreviousWeights(List<Float> previousWeights) {

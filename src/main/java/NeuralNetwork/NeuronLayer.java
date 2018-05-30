@@ -23,7 +23,7 @@ public class NeuronLayer {
     private List<Float> outputs;
 
     private List<Float> errors;
-    private List<Float> gamma;
+    private List<Float> delta;
 
 
     NeuronLayer(List<Neuron> neurons, NeuronLayer prevLayer, NeuronLayer nextLayer) {
@@ -115,11 +115,11 @@ public class NeuronLayer {
         return errors;
     }
 
-    public void setGamma(List<Float> gamma) {
-        this.gamma = gamma;
+    public void setDelta(List<Float> delta) {
+        this.delta = delta;
     }
 
-    public List<Float> getGamma() {
-        return gamma;
+    public List<Float> getDelta() {
+        return delta;
     }
 }

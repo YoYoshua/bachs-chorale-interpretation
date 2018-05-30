@@ -29,33 +29,77 @@ public class NeuralNetwork {
         Scanner scanner = new Scanner(System.in);
 
         System.out.println();
-        System.out.println("How much layers?");
+        System.out.println("How much hidden layers?");
         int layersAmount = scanner.nextInt();
-        for(int i = 0; i < layersAmount - 1; i++) {
+
+        List<Neuron> tempNeurons = new ArrayList<>();
+
+        //Inicjalizacja warstwy wejsciowej
+        for(int i = 0; i < inputSet.get(0).size() - 1; i++) {
+            tempNeurons.add(new SigmoidalNeuron(learningRate, beta));
+            tempNeurons.get(i).initialiseWeights(inputSet.get(0).size());
+        }
+        this.addLayer(tempNeurons);
+
+        //Inicjalizacja warstw ukrytych
+        for(int i = 1; i < layersAmount + 1; i++) {
             System.out.println();
-            System.out.println("How much neurons in layer #" + (i + 1) + "?");
+            System.out.println("How much neurons in hidden layer #" + (i + 1) + "?");
             int neuronsAmount = scanner.nextInt();
 
-            List<Neuron> tempNeurons = new ArrayList<>();
+            tempNeurons = new ArrayList<>();
             for(int j = 0; j < neuronsAmount; j++) {
                 tempNeurons.add(new SigmoidalNeuron(learningRate, beta));
-                if (i == 0)
-                    tempNeurons.get(j).initialiseWeights(inputSet.get(0).size());
-                else
-                    tempNeurons.get(j).initialiseWeights(layers.get(i - 1).getNeuronAmount());
+                tempNeurons.get(j).initialiseWeights(layers.get(i - 1).getNeuronAmount());
             }
             this.addLayer(tempNeurons);
         }
-        //Add final linear neurons
-        System.out.println();
-        System.out.println("How much neurons in layer #" + layersAmount + "?");
-        int neuronsAmount = scanner.nextInt();
 
+        //Inicjalizacja warstwy wyjsciowej neuronem liniowym
+        tempNeurons = new ArrayList<>();
+        tempNeurons.add(new LinearNeuron(learningRate));
+        tempNeurons.get(0).initialiseWeights(layers.get(layers.size() - 1).getNeuronAmount());
+        this.addLayer(tempNeurons);
+
+        this.setData(inputSet, targetSet);
+    }
+
+    public void createNewNetwork(List<List<Float>> inputSet, List<List<Float>> targetSet,
+                                 Float learningRate, Float beta, int S1, int S2) {
+        int layersAmount = 2;
         List<Neuron> tempNeurons = new ArrayList<>();
-        for(int j = 0; j < neuronsAmount; j++) {
-            tempNeurons.add(new LinearNeuron(learningRate));
-            tempNeurons.get(j).initialiseWeights(layers.get(layers.size() - 1).getNeuronAmount());
+
+        //Inicjalizacja warstwy wejsciowej
+        for(int i = 0; i < inputSet.get(0).size() - 1; i++) {
+            tempNeurons.add(new SigmoidalNeuron(learningRate, beta));
+            tempNeurons.get(i).initialiseWeights(inputSet.get(0).size());
         }
+        this.addLayer(tempNeurons);
+
+        //Inicjalizacja warstwy S1
+        int neuronsAmount = S1;
+
+        tempNeurons = new ArrayList<>();
+        for(int j = 0; j < neuronsAmount; j++) {
+            tempNeurons.add(new SigmoidalNeuron(learningRate, beta));
+            tempNeurons.get(j).initialiseWeights(layers.get(0).getNeuronAmount());
+        }
+        this.addLayer(tempNeurons);
+
+        //Inicjalizacja warstwy S2
+        neuronsAmount = S2;
+
+        tempNeurons = new ArrayList<>();
+        for(int j = 0; j < neuronsAmount; j++) {
+            tempNeurons.add(new SigmoidalNeuron(learningRate, beta));
+            tempNeurons.get(j).initialiseWeights(layers.get(1).getNeuronAmount());
+        }
+        this.addLayer(tempNeurons);
+
+        //Inicjalizacja warstwy wyjsciowej neuronem liniowym
+        tempNeurons = new ArrayList<>();
+        tempNeurons.add(new LinearNeuron(learningRate));
+        tempNeurons.get(0).initialiseWeights(layers.get(layers.size() - 1).getNeuronAmount());
         this.addLayer(tempNeurons);
 
         this.setData(inputSet, targetSet);
