@@ -1,15 +1,18 @@
 package main.java;
 
 import main.java.FileManager.FileHandler;
+import main.java.FileManager.FileSaver;
 import main.java.FileManager.Interpreter;
 import main.java.FileManager.Parser;
 import main.java.NeuralNetwork.BackPropagation;
 import main.java.NeuralNetwork.NeuralNetwork;
 import main.java.Normalizer.Normalizer;
+import main.java.Normalizer.Splitter;
 import main.java.Normalizer.Transposer;
 
 import java.io.File;
 import java.util.ArrayList;
+import java.util.Date;
 import java.util.List;
 import java.util.Scanner;
 
@@ -25,11 +28,20 @@ public class CLI {
     private Interpreter interpreter = new Interpreter();
     private Transposer transposer = new Transposer();
     private Normalizer normalizer = new Normalizer();
+    private Splitter splitter = new Splitter();
+    private FileSaver fileSaver = new FileSaver();
+
+    private Date date = new Date();
+
+    private List<String> results;
 
     private NeuralNetwork network;
 
     private List<List<Float>> inputSet;
+    private List<List<Float>> testSet;
+
     private List<List<Float>> targetSet;
+    private List<List<Float>> targetTestSet;
 
     private boolean dataPrepared = false;
     private boolean exit = true;
@@ -39,12 +51,12 @@ public class CLI {
         BackPropagation backPropagation = new BackPropagation();
 
         while(exit) {
-            System.out.println("What do you want to do? (data, train, test, exit)");
+            System.out.println("What do you want to do? (data, train, test, experiment, exit)");
             String choice = scanner.nextLine();
 
             switch (choice) {
                 case "test":
-                    backPropagation.test();
+                    backPropagation.test(testSet, targetTestSet);
                     break;
 
                 case "data":
@@ -66,7 +78,8 @@ public class CLI {
                         System.out.println("You need to prepare data first!");
                         break;
                     } else {
-                        backPropagation.experiment();
+                        results = backPropagation.experiment(inputSet, testSet, targetSet, targetTestSet);
+                        fileSaver.saveDataToFile(results, "resources/results.txt");
                         break;
                     }
 
@@ -98,40 +111,19 @@ public class CLI {
         //targetSet = normalizer.transpose(targetSet);
         targetSet = normalizer.normalize(targetSet);
 
-        System.out.println(inputSet);
-        System.out.println(targetSet);
-//
-//        //XOR Data
-//        List<Float> bias = new ArrayList<>();
-//        bias.add(1.0F);
-//        bias.add(1.0F);
-//        bias.add(1.0F);
-//        bias.add(1.0F);
-//        inputSet.add(bias);
-//
-//        List<Float> temp = new ArrayList<>();
-//        temp.add(0.0F);
-//        temp.add(0.0F);
-//        temp.add(1.0F);
-//        temp.add(1.0F);
-//        inputSet.add(temp);
-//
-//        List<Float> temp2 = new ArrayList<>();
-//        temp2.add(0.0F);
-//        temp2.add(1.0F);
-//        temp2.add(0.0F);
-//        temp2.add(1.0F);
-//        inputSet.add(temp2);
-//        inputSet = normalizer.normalize(inputSet);
-//        System.out.println(inputSet);
-//
-//        List<Float> temp3 = new ArrayList<>();
-//        temp3.add(0.0F);
-//        temp3.add(1.0F);
-//        temp3.add(1.0F);
-//        temp3.add(0.0F);
-//        targetSet.add(temp3);
-//        targetSet = normalizer.normalize(targetSet);
-//        System.out.println(targetSet);
+        testSet = inputSet;
+        targetTestSet = targetSet;
+
+//        splitter.splitData(inputSet, targetSet);
+//        inputSet = splitter.getInputData();
+//        testSet = splitter.getTestData();
+
+//        targetSet = splitter.getTargetData();
+//        targetTestSet = splitter.getTargetTestData();
+
+        System.out.println("Input set size: " + inputSet.size());
+        System.out.println("Test set size: " + testSet.size());
+        System.out.println("Target set size: " + targetSet.size());
+        System.out.println("Test target set size: " + targetTestSet.size());
     }
 }

@@ -18,6 +18,7 @@ public class BackPropagation {
     private Float beta = 0.5F;
     private Float alpha = 0.2F;
     private Float minimalError = 0.25F;
+    private Float finalSSE = 0.F;
     private int epochs;
 
     private NeuralNetwork network;
@@ -47,17 +48,20 @@ public class BackPropagation {
         train();
     }
 
-    public void test() {
+    public Float test(List<List<Float>> testData, List<List<Float>> targetTestData) {
+        Float result = 0.F;
         if(network == null) {
             System.out.println("You need to train your network first!");
-            return;
+            return result;
         } else {
+            network.setData(testData, targetTestData);
             List<Float> output;
             Float good = 0.F;
             Float bad = 0.F;
             Float error;
-            System.out.println("Insert error (value lower than 0,5!):");
-            error = scanner.nextFloat();
+//            System.out.println("Insert error (value lower than 0,5!):");
+//            error = scanner.nextFloat();
+            error = 0.4F;
 
             for(int i = 0; i < network.getInputData().size(); i++) {
                 output = feedForward(network.getInputData().get(i));
@@ -68,12 +72,17 @@ public class BackPropagation {
                     bad++;
                 }
             }
-            Float result = (good / (good + bad)) * 100;
+            result = (good / (good + bad)) * 100;
             System.out.println("Learn percentage: " + result);
         }
+        return result;
     }
 
-    public void experiment(List<List<Float>> inputSet, List<List<Float>> targetSet) {
+    public List<String> experiment(List<List<Float>> inputSet, List<List<Float>> testSet,
+                           List<List<Float>> targetSet, List<List<Float>> targetTestSet) {
+        List<String> results = new ArrayList<>();
+        String tempString = "";
+
         System.out.println("***********************************************************");
         System.out.println("Neural Network Back-Propagation Algorith - Experiments");
         System.out.println();
@@ -81,24 +90,30 @@ public class BackPropagation {
 
         learningRate = 0.01F;
         beta = 0.5F;
-        epochs = 10000;
+        epochs = 20000;
 
         //Create new network
 
-        for(int S1 = 0; S1 < 20; S1++) {
-            for(int S2 = 0; S2 < 20; S2++) {
+        for(Integer i = 5; i <= 9; i++) {
+            for(Integer j = 102; j <= 108; j++) {
+                tempString = "";
                 network = new NeuralNetwork();
-                network.createNewNetwork(inputSet, targetSet, learningRate, beta, S1, S2);
-                train();
-                test();
+                learningRateDecrement = i * 0.1F;
+                learningRateIncrement = j * 0.01F;
+                network.createNewNetwork(inputSet, targetSet, learningRate, beta, 11, 9);
+                System.out.println("Neural network: lr_dec - " + learningRateDecrement + " lr_inc - " + learningRateIncrement);
+                Integer epochs = train();
+                Float learnPercentage = test(testSet, targetTestSet);
+                tempString = "13" + "\t:\t" + "6" + "\t:\t" + learningRateDecrement.toString() + "\t:\t" + learningRateIncrement.toString() +
+                        "\t:\t" + epochs.toString() + "\t:\t"+ finalSSE.toString() + "\t:\t" + learnPercentage.toString() + "\n";
+                results.add(tempString);
             }
         }
-
-        network.testNetwork();
-        train();
+        System.out.println(results);
+        return results;
     }
 
-    private NeuralNetwork train() {
+    private int train() {
         List<Float> output;
         Float epochSSE = 0.F;
         Float prevSSE;
@@ -120,9 +135,13 @@ public class BackPropagation {
             adaptLearningRate(epochSSE, prevSSE);
 //            System.out.println("Learning rate: " + learningRate);
             System.out.println("Epoch #" + x + " - SSE: " + epochSSE);
-            if(epochSSE < minimalError) break;
+            if(epochSSE < minimalError) {
+                finalSSE = epochSSE;
+                return x;
+            }
         }
-        return network;
+        finalSSE = epochSSE;
+        return epochs;
     }
 
     private List<Float> feedForward(List<Float> input) {
